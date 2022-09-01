@@ -8,8 +8,7 @@ from sklearn.preprocessing import MinMaxScaler as mini
 from sklearn.model_selection import train_test_split
 import streamlit as st
 import requests
-import mpld3
-import streamlit.components.v1 as components
+
 
 st.title('PREDICCIONES DE LOS STOCK DE MICROSOFT')
 
