@@ -6,29 +6,35 @@ import pickle
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import MinMaxScaler as mini
 from sklearn.model_selection import train_test_split
-#from streamlit_lottie import st_lottie
 import streamlit as st
 import requests
+import mpld3
+import streamlit.components.v1 as components
 
-#def load_lottieurl(url: str):
-#    r = requests.get(url)
-#    if r.status_code != 200:
-#        return None
-#    return r.json()
+st.title('PREDICCIONES DE LOS STOCK DE MICROSOFT')
 
-#lottie_stock = load_lottieurl('https://assets4.lottiefiles.com/packages/lf20_jhu1lqdz.json')
-#st_lottie(lottie_stock, speed=1, height=200, key="initial")
-st.title('Microsoft Stock Predictor')
+st.write("DATA DEL STOCK DE LOS ULTIMOS 5 ANOS:")
 
-st.write("Stock Predictor for X Days:")
-
-st.sidebar.title('Stock')
-steps = st.sidebar.number_input(label='Day:', min_value=1, max_value=35, step=1)
-
+data = pd.read_csv("MSFT.csv", sep=',')
+data['Date'] = pd.to_datetime(data['Date'], format='%Y/%m/%d')
+data = data.set_index('Date')
+data = data.drop(['Open', 'High', 'Low', 'Adj Close', 'Volume'], axis = 1)
+data.dropna(subset=['Close'], inplace=True)
+chart_data = pd.DataFrame(data)
+st.line_chart(chart_data)
 
 model = joblib.load('msft.pkl')
 
+st.write("PREDICCIONES DE LOS PROXIMOS 35 DIAS:")
 
-y = model.predict(steps=steps)
+steps = 36
+predictions = model.predict(steps=steps)
+predictions = pd.DataFrame(predictions)
+predictions = predictions.reset_index()
+predictions = predictions.drop(['index'], axis = 1)
+chart_data_pred = pd.DataFrame(predictions)
+st.line_chart(chart_data_pred)
 
-print(y)
+df = pd.DataFrame(predictions)
+st.table(df)
+
