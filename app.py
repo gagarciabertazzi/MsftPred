@@ -1,6 +1,5 @@
 import joblib
 import numpy as np
-import matplotlib.pyplot as plt
 import pandas as pd
 import pickle
 from sklearn.linear_model import LinearRegression
